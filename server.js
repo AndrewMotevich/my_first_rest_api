@@ -25,11 +25,13 @@ app.post("/addUser", async function (req, res) {
   // First read existing users.
   const reqData = req.body;
   if (
-    Object.keys(reqData).length === 4 &&
+    Object.keys(reqData).length === 5 &&
     Object.keys(reqData).includes("userName") &&
     Object.keys(reqData).includes("userPassword") &&
     Object.keys(reqData).includes("email") &&
     Object.keys(reqData).includes("phone")
+    &&
+    Object.keys(reqData).includes("id")
   ) {
     const newUser = await client
       .db("myDatabase")
