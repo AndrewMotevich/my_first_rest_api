@@ -13,12 +13,12 @@ const app = express();
 app.use(express.json());
 
 app.get("/listUsers", async function (req, res) {
-  // const usersArray = await client
-  //   .db("myDatabase")
-  //   .collection("users")
-  //   .find()
-  //   .toArray();
-  // res.end(JSON.stringify(usersArray));
+  const usersArray = await client
+    .db("myDatabase")
+    .collection("users")
+    .find()
+    .toArray();
+  res.end(JSON.stringify(usersArray));
 });
 
 app.post("/addUser", async function (req, res) {
@@ -31,15 +31,15 @@ app.post("/addUser", async function (req, res) {
     Object.keys(reqData).includes("email") &&
     Object.keys(reqData).includes("phone")
   ) {
-    // const newUser = await client
-    //   .db("myDatabase")
-    //   .collection("users")
-    //   .insertOne(reqData);
-    // const checkUser = await client
-    //   .db("myDatabase")
-    //   .collection("users")
-    //   .findOne({ userName: `${reqData.userName}` });
-    // res.end(JSON.stringify(checkUser));
+    const newUser = await client
+      .db("myDatabase")
+      .collection("users")
+      .insertOne(reqData);
+    const checkUser = await client
+      .db("myDatabase")
+      .collection("users")
+      .findOne({ userName: `${reqData.userName}` });
+    res.end(JSON.stringify(checkUser));
   } else {
     res.status(500);
     res.end("Some Error");
@@ -49,12 +49,11 @@ app.post("/addUser", async function (req, res) {
 app.get("/:name", async function (req, res) {
   // First read existing users.
   try {
-    const user = {};
-    // const user = await client
-    //   .db("myDatabase")
-    //   .collection("users")
-    //   .findOne({ userName: `${req.params.name}` });
-    if (user === null || true) {
+    const user = await client
+      .db("myDatabase")
+      .collection("users")
+      .findOne({ userName: `${req.params.name}` });
+    if (user === null) {
       res.status(404);
       res.end("This user do not exist");
     } else {
@@ -69,12 +68,11 @@ app.get("/:name", async function (req, res) {
 app.delete("/deleteUser/:name", async function (req, res) {
   // First read existing users.
   try {
-    const user = {};
-    // const user = await client
-    //   .db("myDatabase")
-    //   .collection("users")
-    //   .findOne({ userName: `${req.params.name}` });
-    if (user === null || true) {
+    const user = await client
+      .db("myDatabase")
+      .collection("users")
+      .findOne({ userName: `${req.params.name}` });
+    if (user === null) {
       res.status(404);
       res.end("This user do not exist");
     } else {
@@ -93,12 +91,11 @@ app.delete("/deleteUser/:name", async function (req, res) {
 app.patch("/updateUser/:name", async function (req, res) {
   const reqData = req.body;
   try {
-    const user = {};
-    // const user = await client
-    //   .db("myDatabase")
-    //   .collection("users")
-    //   .findOne({ userName: `${req.params.name}` });
-    if (user === null || true) {
+    const user = await client
+      .db("myDatabase")
+      .collection("users")
+      .findOne({ userName: `${req.params.name}` });
+    if (user === null) {
       res.status(404);
       res.end("This user do not exist");
     } else {
