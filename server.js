@@ -2,6 +2,7 @@
 
 var {MongoClient} = require("mongodb");
 // const uri = 'mongodb://localhost:27017';
+
 // const cloudURI = 'mongodb+srv://andrewmotevich:a9gwZbPpNbuICb29@cluster0.b23op1h.mongodb.net/?retryWrites=true&w=majority'
 const cloudURI =
   "mongodb+srv://vercel-admin-user:MCm8xsb6HBmZkcGP@cluster0.b23op1h.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
