@@ -1,77 +1,88 @@
 /** @format */
 
-const e = require("express");
+const {MongoClient} = require('mongodb');
+// const uri = 'mongodb://localhost:27017';
+const cloudURI = 'mongodb+srv://andrewmotevich:a9gwZbPpNbuICb29@cluster0.b23op1h.mongodb.net/?retryWrites=true&w=majority'
+const client = new MongoClient(cloudURI);
+
 var express = require("express");
 var app = express();
-var fs = require("fs");
 
 app.use(express.json());
 
-app.get("/listUsers", function (req, res) {
-  fs.readFile(__dirname + "/" + "users.json", "utf8", function (err, data) {
-    res.end(data);
-  });
+app.get("/listUsers", async function (req, res) {
+  const usersArray = await client.db('myDatabase').collection('users').find().toArray();
+  res.end(JSON.stringify(usersArray));
 });
 
-app.post("/addUser", function (req, res) {
+app.post("/addUser", async function (req, res) {
   // First read existing users.
   const reqData = req.body;
-  fs.readFile(__dirname + "/" + "users.json", "utf8", function (err, data) {
-    try {
-      const newData = JSON.parse(data);
-      const newId = newData[`${newData.length - 1}`].id + 1;
-      newData.forEach((elem) => {
-        if (elem.email === reqData.email) {
-          res.end('THIS EMAIL EXIST');
-          throw new Error('Error: this email exist')
-        }
-      });
-      reqData.id = newId;
-      newData.push(reqData);
-      fs.writeFile(
-        __dirname + "/" + "users.json",
-        JSON.stringify(newData),
-        {},
-        (err) => {}
-      );
-      res.end(JSON.stringify(newData));
-    } catch (err) {}
-  });
+  if (Object.keys(reqData).length === 4 && Object.keys(reqData).includes('userName') && Object.keys(reqData).includes('userPassword') && Object.keys(reqData).includes('email') && Object.keys(reqData).includes('phone')){
+    const newUser = await client.db('myDatabase').collection('users').insertOne(reqData);
+    const checkUser = await client.db('myDatabase').collection('users').findOne({"userName": `${reqData.userName}`})
+    res.end(JSON.stringify(checkUser));
+  }
+  else {
+    res.status(500)
+    res.end('Some Error')
+  }
 });
 
-app.get("/:id", function (req, res) {
+app.get("/:name", async function (req, res) {
   // First read existing users.
-  fs.readFile(__dirname + "/" + "users.json", "utf8", function (err, data) {
-    const users = JSON.parse(data);
-    let user = {};
-    users.forEach((elem) => {
-      if ((elem.id = req.params.id)) {
-        user = elem;
-      }
-    });
-    res.end(JSON.stringify(user));
-  });
+  try {
+    const user = await client.db('myDatabase').collection('users').findOne({"userName": `${req.params.name}`});
+    if (user === null){
+      res.status(404);
+      res.end("This user do not exist")
+    }
+    else{
+      res.end(JSON.stringify(user))
+    }
+  }
+  catch (err) {
+    res.status(500)
+    res.end(err);
+  }
 });
 
-app.delete('/deleteUser/:id', function (req, res) {
+app.delete('/deleteUser/:name', async function (req, res) {
   // First read existing users.
-  fs.readFile( __dirname + "/" + "users.json", 'utf8', function (err, data) {
-     let newData = JSON.parse( data );
-     newData.forEach((elem, index) => {
-       if (elem.id == req.params.id){
-         console.log(elem.id);
-         console.log(req.params.id);
-         newData.splice(index, 1);
-        fs.writeFile(
-          __dirname + "/" + "users.json",
-          JSON.stringify(newData),
-          {},
-          (err) => {}
-        );
-      }
-     })
-     res.end( JSON.stringify(newData));
-  });
+  try {
+    const user = await client.db('myDatabase').collection('users').findOne({"userName": `${req.params.name}`});
+    if (user === null){
+      res.status(404);
+      res.end("This user do not exist")
+    }
+    else{
+      await client.db('myDatabase').collection('users').deleteOne({"userName": `${req.params.name}`});
+      res.end("This user deleted")
+    }
+  }
+  catch (err) {
+    res.status(500)
+    res.end(err);
+  }
+})
+
+app.patch('/updateUser/:name', async function (req, res){
+  const reqData = req.body;
+  try {
+    const user = await client.db('myDatabase').collection('users').findOne({"userName": `${req.params.name}`});
+    if (user === null){
+      res.status(404);
+      res.end("This user do not exist")
+    }
+    else{
+      await client.db('myDatabase').collection('users').updateOne({"userName": `${req.params.name}`}, { $set: reqData});
+      res.end(JSON.stringify(reqData))
+    }
+  }
+  catch (err) {
+    res.status(500)
+    res.end(err);
+  }
 })
 
 var server = app.listen(8081, function () {
