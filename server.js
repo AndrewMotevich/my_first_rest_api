@@ -1,25 +1,25 @@
 /** @format */
 
-var {MongoClient} = require("mongodb");
+// var {MongoClient} = require("mongodb");
 // const uri = 'mongodb://localhost:27017';
 
 // const cloudURI = 'mongodb+srv://andrewmotevich:a9gwZbPpNbuICb29@cluster0.b23op1h.mongodb.net/?retryWrites=true&w=majority'
-const cloudURI =
-  "mongodb+srv://vercel-admin-user:MCm8xsb6HBmZkcGP@cluster0.b23op1h.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
-const client = new MongoClient(cloudURI);
+// const cloudURI =
+//   "mongodb+srv://vercel-admin-user:MCm8xsb6HBmZkcGP@cluster0.b23op1h.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+// const client = new MongoClient(cloudURI);
 
-var express = require("express");
-var app = express();
+const express = require("express");
+const app = express();
 
 app.use(express.json());
 
 app.get("/listUsers", async function (req, res) {
-  const usersArray = await client
-    .db("myDatabase")
-    .collection("users")
-    .find()
-    .toArray();
-  res.end(JSON.stringify(usersArray));
+  // const usersArray = await client
+  //   .db("myDatabase")
+  //   .collection("users")
+  //   .find()
+  //   .toArray();
+  // res.end(JSON.stringify(usersArray));
 });
 
 app.post("/addUser", async function (req, res) {
@@ -32,15 +32,15 @@ app.post("/addUser", async function (req, res) {
     Object.keys(reqData).includes("email") &&
     Object.keys(reqData).includes("phone")
   ) {
-    const newUser = await client
-      .db("myDatabase")
-      .collection("users")
-      .insertOne(reqData);
-    const checkUser = await client
-      .db("myDatabase")
-      .collection("users")
-      .findOne({ userName: `${reqData.userName}` });
-    res.end(JSON.stringify(checkUser));
+    // const newUser = await client
+    //   .db("myDatabase")
+    //   .collection("users")
+    //   .insertOne(reqData);
+    // const checkUser = await client
+    //   .db("myDatabase")
+    //   .collection("users")
+    //   .findOne({ userName: `${reqData.userName}` });
+    // res.end(JSON.stringify(checkUser));
   } else {
     res.status(500);
     res.end("Some Error");
@@ -50,11 +50,12 @@ app.post("/addUser", async function (req, res) {
 app.get("/:name", async function (req, res) {
   // First read existing users.
   try {
-    const user = await client
-      .db("myDatabase")
-      .collection("users")
-      .findOne({ userName: `${req.params.name}` });
-    if (user === null) {
+    const user = {}
+    // const user = await client
+    //   .db("myDatabase")
+    //   .collection("users")
+    //   .findOne({ userName: `${req.params.name}` });
+    if (user === null || true) {
       res.status(404);
       res.end("This user do not exist");
     } else {
@@ -69,11 +70,12 @@ app.get("/:name", async function (req, res) {
 app.delete("/deleteUser/:name", async function (req, res) {
   // First read existing users.
   try {
-    const user = await client
-      .db("myDatabase")
-      .collection("users")
-      .findOne({ userName: `${req.params.name}` });
-    if (user === null) {
+    const user = {}
+    // const user = await client
+    //   .db("myDatabase")
+    //   .collection("users")
+    //   .findOne({ userName: `${req.params.name}` });
+    if (user === null || true) {
       res.status(404);
       res.end("This user do not exist");
     } else {
@@ -92,11 +94,12 @@ app.delete("/deleteUser/:name", async function (req, res) {
 app.patch("/updateUser/:name", async function (req, res) {
   const reqData = req.body;
   try {
-    const user = await client
-      .db("myDatabase")
-      .collection("users")
-      .findOne({ userName: `${req.params.name}` });
-    if (user === null) {
+    const user = {}
+    // const user = await client
+    //   .db("myDatabase")
+    //   .collection("users")
+    //   .findOne({ userName: `${req.params.name}` });
+    if (user === null || true) {
       res.status(404);
       res.end("This user do not exist");
     } else {
