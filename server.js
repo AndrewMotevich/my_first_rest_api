@@ -1,13 +1,12 @@
 /** @format */
 
-// var {MongoClient} = require("mongodb");
+var { MongoClient } = require("mongodb");
 // const uri = 'mongodb://localhost:27017';
 
 // const cloudURI = 'mongodb+srv://andrewmotevich:a9gwZbPpNbuICb29@cluster0.b23op1h.mongodb.net/?retryWrites=true&w=majority'
-// const cloudURI =
-//   "mongodb+srv://vercel-admin-user:MCm8xsb6HBmZkcGP@cluster0.b23op1h.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
-// const client = new MongoClient(cloudURI);
-
+const cloudURI =
+  "mongodb+srv://vercel-admin-user:MCm8xsb6HBmZkcGP@cluster0.b23op1h.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const client = new MongoClient(cloudURI);
 const express = require("express");
 const app = express();
 
@@ -50,7 +49,7 @@ app.post("/addUser", async function (req, res) {
 app.get("/:name", async function (req, res) {
   // First read existing users.
   try {
-    const user = {}
+    const user = {};
     // const user = await client
     //   .db("myDatabase")
     //   .collection("users")
@@ -70,7 +69,7 @@ app.get("/:name", async function (req, res) {
 app.delete("/deleteUser/:name", async function (req, res) {
   // First read existing users.
   try {
-    const user = {}
+    const user = {};
     // const user = await client
     //   .db("myDatabase")
     //   .collection("users")
@@ -94,7 +93,7 @@ app.delete("/deleteUser/:name", async function (req, res) {
 app.patch("/updateUser/:name", async function (req, res) {
   const reqData = req.body;
   try {
-    const user = {}
+    const user = {};
     // const user = await client
     //   .db("myDatabase")
     //   .collection("users")
